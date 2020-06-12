@@ -1,15 +1,16 @@
-import requests
 import json
+import requests
 from flask import Flask
 from flask_restx import Api, Resource
 
-app = Flask(__name__)
-api = Api(app)
+flask_app = Flask(__name__)
+flask_api = Api(flask_app)
 
-@api.route('/hello')
-class CheckApi(Resource):
-    def get(self):
-        return {'hello': 'world'}
+import resources.routes
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
+
+
+
+
+
