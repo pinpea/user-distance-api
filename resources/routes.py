@@ -15,8 +15,23 @@ class CheckApi(Resource):
         return {'hello': 'world'}
 
 
-@flask_api.route('/number_of_users')
+@flask_api.route('/get_users_in_london')
+class GetKeys(Resource):
+    def get(self):
+        GUD = GetUserDetails(DATA_ROOT_URL)
+        london_users = GUD.get_users_in_requested_city(input_city='London')
+        return {'users_listed_near_london': london_users.to_json(orient='table')}
+
+
+@ flask_api.route('/number_of_users')
 class GetUsers(Resource):
     def get(self):
         GUD = GetUserDetails(DATA_ROOT_URL)
-        return GUD.get_number_of_users()
+        return {'number_of_users': GUD.get_total_num_of_users()}
+
+
+@ flask_api.route('/get_users/<string:distance>')
+class GetKeys(Resource):
+    def get(self, distance='50'):
+        GUD = GetUserDetails(DATA_ROOT_URL)
+        return {'users_near_london': GUD.get_all_users_near_city()}
