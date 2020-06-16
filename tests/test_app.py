@@ -7,13 +7,12 @@ from resources.get_user_details import GetUserDetails
 from app import api_namespace
 from werkzeug.exceptions import BadRequest, InternalServerError
 
-
 name_space = api_namespace.name
 url = 'http://127.0.0.1:5000/'+name_space # default flask app url
 
 DATA_ROOT_URL = 'https://bpdts-test-app.herokuapp.com/'
 
-#ToDO: rewrite with test fixtures
+#ToDO: rewrite with test fixtures, flask test_client 
 
 def test_response():
     response = requests.get(url + '/information')
