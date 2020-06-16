@@ -55,4 +55,6 @@ def calc_equirectangular_dist_miles(lat_1, long_1, lat_long_2=lat_long_london, e
     y = latitude_2 - latitude_1
 
     distance = earth_radius * np.sqrt(x*x + y*y)
+
+
     return distance
