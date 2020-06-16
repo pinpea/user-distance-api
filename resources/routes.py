@@ -6,11 +6,13 @@ from flask_restx import Resource, abort, reqparse, inputs
 from resources.get_user_details import GetUserDetails
 from app import flask_api, api_namespace
 
+from werkzeug.exceptions import BadRequest, InternalServerError
+
 DATA_ROOT_URL = 'https://bpdts-test-app.herokuapp.com/'
 
 
 
-parser = reqparse.RequestParser()
+parser = reqparse.RequestParser(bundle_errors=True)
 
 parser.add_argument('city', type=str,default='London', help='The city used to query the bpdts-test-app API for users listed as living in that city. \n e.g., default value of London will return all users who list themselves as living in London. ', location='args')
 parser.add_argument('return_users', type=inputs.boolean, default=False, help='Optionally, also return users who meet criteria as part of the query',location='args')
@@ -43,7 +45,7 @@ class GetUsersGeneric(Resource):
             else: 
                 return {'number_of_users': len(users_near_city), 'users' : users_near_city}
 
-        except KeyError as e:
+        except BadRequest as e:
             api_namespace.abort(400, str(e), status = "Bad Request", statusCode = "400")
         except Exception as e:
             api_namespace.abort(500, str(e), status = "Internal Server Error", statusCode = "500")

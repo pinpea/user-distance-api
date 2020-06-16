@@ -5,12 +5,15 @@ import json
 import time
 from resources.get_user_details import GetUserDetails
 from app import api_namespace
+from werkzeug.exceptions import BadRequest, InternalServerError
+
 
 name_space = api_namespace.name
 url = 'http://127.0.0.1:5000/'+name_space # default flask app url
 
 DATA_ROOT_URL = 'https://bpdts-test-app.herokuapp.com/'
 
+#ToDO: rewrite with test fixtures
 
 def test_response():
     response = requests.get(url + '/information')
@@ -44,9 +47,20 @@ def test_junk_input_response():
 
     assert response_general['number_of_users'] == response_london_specific['number_of_users']
 
+def test_check_error_handling():
+    """test how errors are handled when broken request is passed - & missing before distance """
+    GUD = GetUserDetails(DATA_ROOT_URL)    
+    test_city = 'Dhangarhi'
+    test_latitude = '28.6852'
+    test_longitude = '80.6216'
+    test_find_users_in_range = 'true'
+    test_return_users = 'true'
+    
 
-# def test_error_handling():
-#     response_general = (requests.get(url + '/get_number_of_users_in_range/?kity=London&return_users=false&find_users_in_range=true&distance=50&latitude=51.506&longitude=-0.1272')).json()
+    response_general = requests.get(url + '/get_number_of_users_in_range/?city='+test_city+'&return_users='+test_return_users+'&find_users_in_range='+test_find_users_in_range+'distance=50&latitude='+test_latitude+'&longitude='+test_longitude)   
+
+    assert response_general.status_code == 400
+
 def test_returned_keys():
     """ Check for errors in the returned keys when users are not returned"""
     GUD = GetUserDetails(DATA_ROOT_URL)    
@@ -103,8 +117,25 @@ def test_returned_cities():
             return
     assert True
 
+
+
     
 #!-- Validation of output of GUD methods--
+
+# def test_check_distance_calculation():
+#     GUD = GetUserDetails(DATA_ROOT_URL)    
+#     test_city = 'Dhangarhi'
+#     test_latitude = '28.6852'
+#     test_longitude = '80.6216'
+#     test_find_users_in_range = 'true'
+#     test_return_users = 'true'
+    
+#     response_general = (requests.get(url + '/get_number_of_users_in_range/?city='+test_city+'&return_users='+test_return_users+'&find_users_in_range='+test_find_users_in_range+'&distance=50&latitude='+test_latitude+'&longitude='+test_longitude)).json()    
+#     print(response_general)
+ 
+
+
+ 
 
 def test_compare_calc_methods():
     GUD = GetUserDetails(DATA_ROOT_URL)
