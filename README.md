@@ -7,7 +7,8 @@ The available options are as follows:
 ```http
 /user_distances/get_number_of_users_in_range/
 ```
-This request returns the number of users who are either listed as living in London or whose current coordinates are within 50 miles of London. 
+
+This request returns the number of users who are either listed as living in London or whose current coordinates are within 50 miles of London.
 
 ```http
 /user_distances/get_number_of_users_in_range/?city=London&return_users=false&find_users_in_range=true&distance=50&latitude=51.506&longitude=-0.1272
@@ -24,11 +25,12 @@ Returns the total number of users from the bptds-test-app API. Used for testing 
 ```http
 /user_distances/information
 ```
+
 Used for testing.
 
 ## Requirements
 
-This project depends on Python 3, pip3 and virtualenv. Note these instructions were checked using Ubuntu 18.04, other systems may vary. A Docker image with this demo is also available, see below.
+This project depends on Python 3, pip3 and virtualenv. Note these instructions were checked using Ubuntu 18.04,and MacOS Catalina 10 other systems may vary. A Docker image with this demo is also available, see below.
 
 ### Setup virtual environment and run demo locally
 
@@ -50,20 +52,19 @@ python run.py
 
 ### Run tests with Pytest
 
-Tests can be run using pytest: 
+Tests can be run using pytest:
 
 ```bash
 python -m pytest -s tests
 ```
 
-From the root of the project folder. 
+From the root of the project folder.
 
 ## Using the API - Swagger
 
 Open a web-browser at 127.0.0.1:5000 to view Swagger API GUI with documentation. Requests can be executed from the Swagger GUI.
 
 ![Swagger API overview](./docs/swagger.png)
-
 
 The API requests can also be called directly, e.g.,
 
@@ -95,5 +96,3 @@ Open Web browser at localhost:5000
 ```bash
 docker exec container_name_1 python -m pytest -s tests
 ```
-
-
