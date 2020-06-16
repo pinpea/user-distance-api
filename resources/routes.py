@@ -59,8 +59,7 @@ class ApiInfo(Resource):
             GUD = GetUserDetails(DATA_ROOT_URL)
             total_number_of_users = GUD.get_total_num_of_users()
             return {'total_number_of_users': total_number_of_users}
-        except KeyError as e:
+        except BadRequest as e:
             api_namespace.abort(400, str(e), status = "Bad Request", statusCode = "400")
-        
         except Exception as e:
             api_namespace.abort(500, str(e), status = "Internal Server Error", statusCode = "500")
