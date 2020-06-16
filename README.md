@@ -44,7 +44,7 @@ From the root of the project folder.
 
 Open a web-browser at 127.0.0.1:5000 to view API GUI and execute request there
 
-![Swagger API overview](./swagger.png)
+![Swagger API overview](./docs/swagger.png)
 
 
 The API requests can also be called directly, e.g.,
