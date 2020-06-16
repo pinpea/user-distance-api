@@ -5,25 +5,25 @@ Uses the bpdts-test-app API and returns users who are either listed as living in
 The available options are as follows:
 
 ```http
-/user_distances/get_number_of_users_in_range/
+localhost:5000/user_distances/get_number_of_users_in_range/
 ```
 
 This request returns the number of users who are either listed as living in London or whose current coordinates are within 50 miles of London.
 
 ```http
-/user_distances/get_number_of_users_in_range/?city=London&return_users=false&find_users_in_range=true&distance=50&latitude=51.506&longitude=-0.1272
+localhost:5000/user_distances/get_number_of_users_in_range/?city=London&return_users=false&find_users_in_range=true&distance=50&latitude=51.506&longitude=-0.1272
 ```
 
 This second request is the more generic use-case. With the default parameters, this request will return the same output as the first request.
 
 ```http
-/user_distances/get_total_number_of_users
+localhost:5000/user_distances/get_total_number_of_users
 ```
 
 Returns the total number of users from the bptds-test-app API. Used for testing purposes.
 
 ```http
-/user_distances/information
+localhost:5000/user_distances/information
 ```
 
 Used for testing.
@@ -62,7 +62,7 @@ From the root of the project folder.
 
 ## Using the API - Swagger
 
-Open a web-browser at 127.0.0.1:5000 to view Swagger API GUI with documentation. Requests can be executed from the Swagger GUI.
+Open a web-browser at http://127.0.0.1:5000 (or localhost:5000) to view Swagger API GUI with documentation. Requests can be executed from the Swagger GUI.
 
 ![Swagger API overview](./docs/swagger.png)
 
@@ -95,4 +95,12 @@ Open Web browser at localhost:5000
 
 ```bash
 docker exec container_name_1 python -m pytest -s tests
+```
+
+### To kill the container
+
+If container has not already stopped, run:
+
+```bash
+docker kill container_name_1
 ```
