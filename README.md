@@ -4,13 +4,31 @@ Uses the bpdts-test-app API and returns users who are either listed as living in
 
 The available options are as follows:
 
-- /get_users_in_london_region : this request returns the number of users who are either listed as living in London or whose current coordinates are within 50 miles of London. 
+```http
+/user_distances/get_number_of_users_in_range/
+```
+This request returns the number of users who are either listed as living in London or whose current coordinates are within 50 miles of London. 
 
-- ​/get_users​/{distance}​/{latitude}​/{longitude} : the more generic use-case for the above; this request will return the users within a requested distance of a requested place, given as latitude and longitude.
+```http
+/user_distances/get_number_of_users_in_range/?city=London&return_users=false&find_users_in_range=true&distance=50&latitude=51.506&longitude=-0.1272
+```
+
+This second request is the more generic use-case. With the default parameters, this request will return the same output as the first request.
+
+```http
+/user_distances/get_total_number_of_users
+```
+
+Returns the total number of users from the bptds-test-app API. Used for testing purposes.
+
+```http
+/user_distances/information
+```
+Used for testing.
 
 ## Requirements
 
-This project depends on Python 3, pip3 and virtualenv. Note these instructions were checked using Ubuntu 18.04, other systems may vary.
+This project depends on Python 3, pip3 and virtualenv. Note these instructions were checked using Ubuntu 18.04, other systems may vary. A Docker image with this demo is also available, see below.
 
 ### Setup virtual environment and run demo locally
 
@@ -30,7 +48,7 @@ python run.py
 
 ```
 
-### Pytest
+### Run tests with Pytest
 
 Tests can be run using pytest: 
 
@@ -40,27 +58,23 @@ python -m pytest -s tests
 
 From the root of the project folder. 
 
-## Using the API
+## Using the API - Swagger
 
-Open a web-browser at 127.0.0.1:5000 to view API GUI and execute request there
+Open a web-browser at 127.0.0.1:5000 to view Swagger API GUI with documentation. Requests can be executed from the Swagger GUI.
 
 ![Swagger API overview](./docs/swagger.png)
 
 
 The API requests can also be called directly, e.g.,
 
-```bash
-http://127.0.0.1:5000/user_distances/get_num_users_in_london/
+```http
+http://127.0.0.1:5000/user_distances/get_number_of_users_in_range/
 
-http://127.0.0.1:5000/user_distances/get_num_users_in_london/?distance=50&latitude=51.506&longitude=-0.1272&city=London&return_users=false
+http://127.0.0.1:5000/user_distances/get_number_of_users_in_range/?city=London&return_users=false&find_users_in_range=true&distance=50&latitude=51.506&longitude=-0.1272
 
 ```
 
-***Please note that the distance parameter should be entered as a float - i.e, 50.0 not 50.*** 
-
-
-
-## Using Docker with this demo
+## Using this API with Docker
 
 ```bash
 docker build -t flask_demo .
@@ -76,7 +90,7 @@ docker run -d --name container_name_1 -p 5000:5000 flask_demo
 
 Open Web browser at localhost:5000
 
-### Executing the pytests in Docker
+### Run the tests with PyTest in Docker
 
 ```bash
 docker exec container_name_1 python -m pytest -s tests

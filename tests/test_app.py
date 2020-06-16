@@ -23,37 +23,86 @@ def test_app_output():
     assert expected_output == response.json()
 
 
-def test_number_of_users():
+def test_total_number_of_users():
     expected_total_users = 1000
-    response = requests.get(url + '/total_number_of_users')
+    response = requests.get(url + '/get_total_number_of_users')
     response_as_dict = response.json()
     num_of_users_returned = response_as_dict['total_number_of_users']
     assert int(num_of_users_returned) == expected_total_users
 
 def test_users_in_50miles():
     """ Validate that the London specific and the general method give the same output """
-    response_general = (requests.get(url + '/get_users/50.0/51.506/-0.1272')).json()
-    response_london_specific = (requests.get(url + '/get_users_in_london_region')).json()
+    response_general = (requests.get(url + '/get_number_of_users_in_range/?city=London&return_users=false&find_users_in_range=true&distance=50&latitude=51.506&longitude=-0.1272')).json()
+    response_london_specific = (requests.get(url + '/get_number_of_users_in_range')).json()
+
+    assert response_general['number_of_users'] == response_london_specific['number_of_users']
+
+def test_junk_input_response():
+    """ If parameters set incorrectly the request is set to request with default parameters"""
+    response_general = (requests.get(url + '/get_number_of_users_in_range/?junk')).json()
+    response_london_specific = (requests.get(url + '/get_number_of_users_in_range')).json()
+
+    assert response_general['number_of_users'] == response_london_specific['number_of_users']
+
+
+# def test_error_handling():
+#     response_general = (requests.get(url + '/get_number_of_users_in_range/?kity=London&return_users=false&find_users_in_range=true&distance=50&latitude=51.506&longitude=-0.1272')).json()
+def test_returned_keys():
+    """ Check for errors in the returned keys when users are not returned"""
+    GUD = GetUserDetails(DATA_ROOT_URL)    
+    test_city = 'Dhangarhi'
+    test_find_users_in_range = 'false'
+    test_return_users = 'false'
     
-    assert response_general['number_users_near_city'] == response_london_specific['number_users_near_london']
+    response_general = (requests.get(url + '/get_number_of_users_in_range/?city='+test_city+'&return_users='+test_return_users+'&find_users_in_range='+test_find_users_in_range)).json()
+    
+    expected_keys = ['number_of_users']
+    assert expected_keys == list(response_general.keys())
+
+
+def test_returned_keys_users():
+    """ Check for errors in the returned keys when users are returned"""
+    GUD = GetUserDetails(DATA_ROOT_URL)    
+    test_city = 'Dhangarhi'
+    test_find_users_in_range = 'false'
+    test_return_users = 'true'
+    
+    response_general = (requests.get(url + '/get_number_of_users_in_range/?city='+test_city+'&return_users='+test_return_users+'&find_users_in_range='+test_find_users_in_range)).json()
+    
+    expected_keys = ['number_of_users', 'users' ]
+    assert expected_keys == list(response_general.keys())
+
+def test_users_for_returned_city():
+    GUD = GetUserDetails(DATA_ROOT_URL)    
+    test_city = 'Dhangarhi'
+    test_find_users_in_range = 'false'
+    test_return_users = 'true'
+    
+    response_general = (requests.get(url + '/get_number_of_users_in_range/?city='+test_city+'&return_users='+test_return_users+'&find_users_in_range='+test_find_users_in_range)).json()
+    response_from_gud = GUD.get_users_in_requested_city(test_city)
+
+    for i, v in enumerate (response_from_gud['id'].values):
+        if response_general['users'][i]['id'] != v :
+            assert False
+    assert True
 
 
 def test_returned_cities():
     GUD = GetUserDetails(DATA_ROOT_URL)    
-    test_city = "Dhangarhi"
-    users_in_test_city = GUD.get_users_in_requested_city(test_city)
+    test_city = 'Dhangarhi'
+    test_find_users_in_range = 'false'
+    test_return_users = 'true'
+    
+    response_general = (requests.get(url + '/get_number_of_users_in_range/?city='+test_city+'&return_users='+test_return_users+'&find_users_in_range='+test_find_users_in_range)).json()
 
-    # GUD.get_user_keys()
+    for user in response_general['users']:
+        test_user_response = (requests.get(DATA_ROOT_URL + '/user/'+ str(user['id']))).json()
 
-    for user in users_in_test_city.head().itertuples():
-        #check city for each user
-        # print(user)
-        test_user_response = (requests.get(DATA_ROOT_URL + '/user/'+ str(user.id))).json()
-        if test_user_response['city'] != test_city:
+        if test_user_response['city'] != test_city :
             assert False
             return
-    
     assert True
+
     
 #!-- Validation of output of GUD methods--
 
@@ -71,8 +120,8 @@ def test_compare_calc_methods():
 
     tictoc2 = toc - tic
 
-    print(f"Haversine was {tictoc1:0.4f} seconds\n")
-    print(f"Equirectangular was {tictoc2:0.4f} seconds\n")
+    print(f"\nHaversine was calculated in {tictoc1:0.4f} seconds\n")
+    print(f"Equirectangular was calculated in {tictoc2:0.4f} seconds\n")
 
     assert user_distances_haversine.shape[0] == user_distances_equirectangular.shape[0]
 

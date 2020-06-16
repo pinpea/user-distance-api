@@ -3,7 +3,7 @@ import requests
 
 from resources.calc_distances import calc_haversine_dist_miles, calc_equirectangular_dist_miles
 import pandas as pd
-
+from numpy import nan
 
 class GetUserDetails(object):
 
@@ -44,7 +44,6 @@ class GetUserDetails(object):
         Lists the available keys available for a user
         """
         available_keys = self._users.columns.values.tolist()
-        print(available_keys)
         return available_keys
 
     def get_users_in_requested_city(self, input_city='London'):
@@ -52,14 +51,11 @@ class GetUserDetails(object):
         Returns data frame of users from bpdts-test-app that are listed as living in a given city, London by default.
         """
         query_city_url = self._root_url + 'city/'+input_city+'/users'
-        try:
-            user_request = requests.get(query_city_url)
-            users_in_city = pd.DataFrame(user_request.json())
-            user_request.raise_for_status()
-            return users_in_city
 
-        except requests.exceptions.HTTPError as err:
-            raise NoResultFound(err)
+        user_request = requests.get(query_city_url)
+        users_in_city = pd.DataFrame(user_request.json())
+        user_request.raise_for_status()
+        return users_in_city
 
         
     def filter_users_by_distance(self, users,  requested_range=50, requested_lat_long=(51.506, -0.1272)):
@@ -97,14 +93,14 @@ class GetUserDetails(object):
                                        <= requested_range]
         return users_within_range
 
-    def get_all_users_near_city(self, requested_range=50, city='London', requested_lat_long=(51.506, -0.1272)):
+    def get_all_users_near_city(self, requested_range=50, input_city='London', find_users_in_range=True , requested_lat_long=(51.506, -0.1272)):
         """
         Returns unique users and their current distance for users who either list themselves as living in the requested city, or whose current coordinates are within a requested range of a city.
         Those who are listed as living in the current city return a distance of 0 from the city.
         """
-        users_in_city = self.get_users_in_requested_city()
+        users_in_city = self.get_users_in_requested_city(input_city) # returns users listed as living in input_city
                
-        if self._find_users_in_range == True:
+        if find_users_in_range == True: 
             users_in_range = self.filter_users_by_distance(self._users,
                                                        requested_range, requested_lat_long)
             # merges queries and removes duplicates
@@ -113,7 +109,7 @@ class GetUserDetails(object):
         else:
             # merges queries and removes duplicates
             all_users_in_city = (users_in_city).drop_duplicates(keep=False)
-            all_users_in_city['distance_from_city']= np.nan
+            all_users_in_city['distance_from_city']= nan
 
         # Replace null with 0 for values in calculated distance returned from get_users_in_requested_city()
         all_users_in_city['distance_from_city']= all_users_in_city['distance_from_city'].fillna(value=0) 

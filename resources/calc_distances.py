@@ -11,6 +11,7 @@ def calc_haversine_dist_miles(lat_1, long_1, lat_long_2=lat_long_london, earth_r
     By default, distance returned in miles, to get km change earth radius to earth_radius=6371
 
     """
+    
     # Convert city coordinates into a vector to perform vectorised calculation
     assert len(lat_1) == len(long_1)
     vector_ones = np.ones(len(lat_1))
