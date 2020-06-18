@@ -25,7 +25,7 @@ class GetUserDetails(object):
         self._find_users_in_range = find_users_in_range 
         
         if requested_range <0:
-            requested_range*=1
+            requested_range*=-1
 
         self._requested_range = requested_range  # set to 50 miles by default
 
