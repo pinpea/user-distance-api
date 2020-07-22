@@ -1,6 +1,6 @@
 # Flask API demo to find users near London
 
-Uses the bpdts-test-app API and returns users who are either listed as living in a given city or whose current location is within a requested number of miles of that city. This project was reimplemented in [TypeScript](https://github.com/pinpea/user-distance-api-ts)
+Uses the bpdts-test-app API and returns users who are either listed as living in a given city or whose current location is within a requested number of miles of that city. I also mplemented this project in [TypeScript](https://github.com/pinpea/user-distance-api-ts)
 
 The available options are as follows:
 
